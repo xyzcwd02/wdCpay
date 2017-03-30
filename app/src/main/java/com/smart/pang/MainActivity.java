@@ -60,6 +60,12 @@ public class MainActivity extends AppCompatActivity {
                getNetData();
            }
        });
+        findViewById(R.id.tv_text).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this,"xiaomaolv",Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void getNetData() {
