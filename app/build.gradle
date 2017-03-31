@@ -13,10 +13,10 @@ android {
         applicationId "com.smart.pang"
         minSdkVersion 17
         targetSdkVersion 25
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         versionCode  verCode
         versionName  APP_VERSION
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
@@ -44,11 +44,6 @@ android {
             signingConfig signingConfigs.signingConfig
         }
         debug {
-        }
-        sourceSets {
-            main {
-                jniLibs.srcDirs = ['libs']
-            }
         }
     }
     //修改生成的apk名字及输出文件夹
