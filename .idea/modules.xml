@@ -4,9 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/HD_Pay.iml" filepath="$PROJECT_DIR$/HD_Pay.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/wdCpay.iml" filepath="$PROJECT_DIR$/wdCpay.iml" />
-      <module fileurl="file://$PROJECT_DIR$/wd_pay/wd_pay.iml" filepath="$PROJECT_DIR$/wd_pay/wd_pay.iml" />
       <module fileurl="file://$PROJECT_DIR$/wd_pay/wd_pay.iml" filepath="$PROJECT_DIR$/wd_pay/wd_pay.iml" />
     </modules>
   </component>
