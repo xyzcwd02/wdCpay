@@ -9,16 +9,6 @@ def verCode = 14
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
-    defaultConfig {
-        applicationId "com.smart.pang"
-        minSdkVersion 17
-        targetSdkVersion 25
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        multiDexEnabled true
-        versionCode  verCode
-        versionName  APP_VERSION
-    }
-
     signingConfigs {
         signingConfig {
             keyAlias 'helloword'
@@ -28,53 +18,85 @@ android {
         }
     }
 
-    //渠道Flavors
-    productFlavors {
-        hengda {
-            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "hengda"]
-        }
+    defaultConfig {
+        applicationId "com.smart.pang"
+        minSdkVersion 17
+        targetSdkVersion 25
+        multiDexEnabled true
+        versionCode verCode
+        versionName APP_VERSION
+        resValue("string", 'app_version', APP_VERSION)
+        buildConfigField "boolean", "LEO_DEBUG", "true"
+        buildConfigField 'String', 'API_SERVER_URL', RELEASE_API_SERVER_URL
+        buildConfigField 'String', 'API_SERVER_URL_MALL', RELEASE_API_SERVER_URL_MALL
+        signingConfig signingConfigs.signingConfig
     }
-
     buildTypes {
         release {
+            buildConfigField 'String', 'API_SERVER_URL', RELEASE_API_SERVER_URL
+            buildConfigField 'String', 'API_SERVER_URL_MALL', RELEASE_API_SERVER_URL_MALL
+            buildConfigField 'String', 'IM_SERVER_HOST', RELEASE_IM_SERVER_HOST
+            buildConfigField 'int', 'IM_SERVER_PORT', RELEASE_IM_SERVER_PORT
+            buildConfigField "boolean", "LEO_DEBUG", RELEASE_LEO_DEBUG
             minifyEnabled true
             zipAlignEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.signingConfig
         }
         debug {
+            buildConfigField 'String', 'API_SERVER_URL', RELEASE_API_SERVER_URL
+            buildConfigField 'String', 'API_SERVER_URL_MALL', RELEASE_API_SERVER_URL_MALL
+            buildConfigField 'String', 'IM_SERVER_HOST', RELEASE_IM_SERVER_HOST
+            buildConfigField 'int', 'IM_SERVER_PORT', RELEASE_IM_SERVER_PORT
+            buildConfigField "boolean", "LEO_DEBUG", RELEASE_LEO_DEBUG
         }
     }
-    //修改生成的apk名字及输出文件夹
+    dexOptions {
+        javaMaxHeapSize "2g"
+    }
+
+
+    //渠道Flavors，我这里写了一些常用的
+    productFlavors {
+        commonsoon {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "commonsoon"]
+        }
+        zhushou91 {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "zhushou91"]
+        }
+    }
+
+    allprojects {
+        repositories {
+            mavenCentral()
+            maven { url "https://jitpack.io" }
+        }
+    }
+    //修改生成的apk名字
     applicationVariants.all { variant ->
         variant.outputs.each { output ->
-            //新名字
             def newName
-            //时间戳
             def timeNow
-            //输出文件夹
-            def outDirectory
-            //是否为Jenkins打包，输出路径不同
+            def oldFile = output.outputFile
+            def outDirectory = oldFile.parent
+
             if ("true".equals(IS_JENKINS)) {
-                //Jenkins打包输出到服务器路径
-                timeNow = BUILD_TIME
-                //BUILD_PATH为服务器输出路径
-                outDirectory = 'D:\\apk\\jen'
-                //AutoBuildTest-v1.0.1-xiaomi-release.apk
-                newName = 'AutoBuildTest-v' + APP_VERSION + '-' + variant.productFlavors[0].name + '-' + variant.buildType.name + '.apk'
+                timeNow = JENKINS_TIME
+                outDirectory = 'G:/Tomcat/webapps/jenkins/apk'
+                newName = 'yj-android-v' +
+                        APP_VERSION + '-' + variant.productFlavors[0].name + timeNow + '-' + variant.buildType.name + '.apk'
             } else {
-                //本机打包输出在本机路径
                 timeNow = getDate()
-                outDirectory = 'D:\\apk\\jen'
-                if ('debug'.equals(variant.buildType.name)) {
-                    newName = "AutoBuildTest-v${APP_VERSION}-debug.apk"
+                if (variant.buildType.name.equals('debug')) {
+                    newName = "yj-android-v${APP_VERSION}-debug.apk"
                 } else {
-                    //AutoBuildTest-v1.0.1-xiaomi-release.apk
-                    newName = 'AutoBuildTest-v' + APP_VERSION + '-' + variant.productFlavors[0].name + '-' + variant.buildType.name + '.apk'
+                    newName = 'yj-android-v' +
+                            APP_VERSION + '-' + variant.productFlavors[0].name + timeNow + '-' + variant.buildType.name + '.apk'
                 }
             }
-            output.outputFile = new File(outDirectory+'/'+timeNow, newName)
+
+            output.outputFile = new File(outDirectory, newName)
+
         }
     }
 
@@ -82,6 +104,7 @@ android {
         abortOnError false
     }
 }
+
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
